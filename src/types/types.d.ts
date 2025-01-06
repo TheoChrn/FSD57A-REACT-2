@@ -1,6 +1,8 @@
 interface User {
+  id: string;
   firstname: string;
   lastname: string;
   image?: string;
-  website?: string;
+  website: string;
+  birthDate: string;
 }
