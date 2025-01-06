@@ -1,10 +1,13 @@
 import { Avatar } from "@/components/avatar";
 import { Hello } from "@/components/hello-world";
+import { API_URL } from "@/lib/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 function App() {
   const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const profiles = [
     {
@@ -22,21 +25,31 @@ function App() {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const users = await axios.get("https://jsonplaceholder.org/users");
+        setIsLoading(true);
+        const users = await axios.get(`${API_URL}/users`);
         setUsers(users.data);
       } catch (error) {
         console.error(error);
+        setError(
+          error instanceof Error ? error.message : "Failed to fetch data"
+        );
+      } finally {
+        setIsLoading(false);
       }
     };
     getUsers();
   }, []);
+
+  if (isLoading) return "loading...";
+
+  if (error) return <span>{error}</span>;
 
   return (
     <>
       <Hello />
       {profiles.length &&
         profiles.map((user, index) => <Avatar key={index} {...user} />)}
-      {users.length &&
+      {users.length ? (
         users.map((user, index) => (
           <Avatar
             key={index}
@@ -44,7 +57,10 @@ function App() {
             lastname={user.lastname}
             website={user.website}
           />
-        ))}
+        ))
+      ) : (
+        <div>No users</div>
+      )}
     </>
   );
 }
