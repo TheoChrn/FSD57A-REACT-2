@@ -1,18 +1,11 @@
-export function Avatar({
-  firstName,
-  lastName,
-  image,
-}: {
-  firstName: string;
-  lastName: string;
-  image: string;
-}) {
+export function Avatar({ firstname, lastname, image, website }: User) {
   return (
     <div>
       <h2>
-        {firstName} {lastName}
+        {firstname} {lastname}
       </h2>
-      <img src={image} alt="photo de profil" />
+      {image && <img src={image} alt="photo de profil" />}
+      {website && <span>{website}</span>}
     </div>
   );
 }
