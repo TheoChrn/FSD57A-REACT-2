@@ -8,6 +8,9 @@ import { Home, usersLoader } from "@/pages/home/page";
 import User, { userLoader } from "@/pages/users/userId/page";
 import ErrorPage from "@/pages/error";
 import NotFound from "@/pages/not-found/page";
+import RootLayout from "@/pages/layout";
+import WeatherPage from "@/pages/weather/page";
+import { UsersProvider } from "@/contexts/user-context";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +24,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     errorElement: <ErrorPage />,
+    element: <RootLayout />,
     children: [
       {
         index: true,
@@ -34,6 +38,11 @@ const router = createBrowserRouter([
         loader: userLoader(queryClient),
         errorElement: <ErrorPage />,
       },
+      {
+        path: "weather",
+        element: <WeatherPage />,
+        errorElement: <ErrorPage />,
+      },
       { path: "/*", element: <NotFound /> },
     ],
   },
@@ -43,7 +52,9 @@ const rootElement = document.getElementById("root");
 ReactDOM.createRoot(rootElement!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <UsersProvider>
+        <RouterProvider router={router} />
+      </UsersProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

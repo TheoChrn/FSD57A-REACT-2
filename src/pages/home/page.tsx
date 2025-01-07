@@ -1,27 +1,21 @@
 import { Avatar } from "@/components/avatar";
 import { Hello } from "@/components/hello-world";
+import { Loading } from "@/components/loading";
+import { useUsers } from "@/contexts/user-context";
 import { API_URL } from "@/lib/utils";
-import {
-  QueryClient,
-  queryOptions,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { QueryClient, queryOptions } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useNavigation } from "react-router";
-import { Loading } from "@/components/loading";
 
 export const usersQuery = () =>
   queryOptions({
     queryKey: ["users"],
     queryFn: async () => {
-      const user = await axios.get(`${API_URL}/users`);
-      if (!user) {
-        throw new Response("", {
-          status: 404,
-          statusText: "Not Found",
-        });
+      const response = await axios.get(`${API_URL}/users`);
+      if (!response) {
+        throw new Error("Failed to fetch users");
       }
-      return user;
+      return response.data;
     },
   });
 
@@ -30,10 +24,8 @@ export const usersLoader = (queryClient: QueryClient) => async () => {
 };
 
 export function Home() {
-  const { data } = useSuspenseQuery(usersQuery());
   const { state } = useNavigation();
-
-  const users: User[] = data.data;
+  const { users } = useUsers();
   if (state === "loading") return <Loading />;
 
   return (

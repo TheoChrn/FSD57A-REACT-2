@@ -1,15 +1,16 @@
 import { Avatar } from "@/components/avatar";
 import { Loading } from "@/components/loading";
-import { API_URL } from "@/lib/utils";
+import { API_URL, WEATHER_API_KEY, WEATHER_API_URL } from "@/lib/utils";
 import {
   QueryClient,
   queryOptions,
+  useQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
 import { LoaderFunctionArgs, useLoaderData, useNavigation } from "react-router";
 
-export const userDetailQuery = (id: string) =>
+const userDetailQuery = (id: string) =>
   queryOptions({
     queryKey: ["user", id],
     queryFn: async () => {
@@ -44,11 +45,51 @@ export default function User() {
 
   const user: User = data.data;
 
+  const { lat, lng } = user.address.geo;
+
+  const {
+    data: weatherData,
+    isLoading: isWeatherLoading,
+    error: weatherError,
+  } = useQuery({
+    queryKey: ["user", userId, "city"],
+    queryFn: async () => {
+      const weather = await axios.get(
+        `${WEATHER_API_URL}/weather?lat=${lat}&lon=${lng}&appid=${WEATHER_API_KEY}&units=metric`
+      );
+      if (!weather) {
+        throw new Response("", {
+          status: 404,
+          statusText: "Not Found",
+        });
+      }
+      return weather;
+    },
+    enabled: Boolean(user),
+  });
+
   if (state === "loading") return <Loading />;
 
+  if (isWeatherLoading) return <Loading />;
+
+  if (weatherError) return <p>{weatherError.message}</p>;
+
+  const weather: Weather = weatherData?.data;
+
   return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-max flex flex-col items-center justify-center">
       <Avatar image="https://i.pravatar.cc/150?u=fake@pravatar.com" {...user} />
+      {weather && (
+        <div className="flex flex-col items-center justify-center">
+          <h2>{weather.name}</h2>
+          <ul>
+            <li>Temperature: {weather.main.temp} °C</li>
+            <li>Feels like: {weather.main.feels_like} °C</li>
+            <li>Min: {weather.main.temp_min} °C</li>
+            <li>Max: {weather.main.temp_max} °C</li>
+          </ul>
+        </div>
+      )}
     </main>
   );
 }

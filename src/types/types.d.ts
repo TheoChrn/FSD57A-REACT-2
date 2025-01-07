@@ -5,4 +5,20 @@ interface User {
   image?: string;
   website: string;
   birthDate: string;
+  address: {
+    geo: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
+interface Weather {
+  name: string;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+  };
 }
