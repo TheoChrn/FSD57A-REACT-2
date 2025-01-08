@@ -1,19 +1,8 @@
 import { Link, useLocation } from "react-router";
 
-const navigation = [
-  { name: "Dashboard", to: "/", current: true },
-  { name: "Weather", to: "/weather", current: false },
-];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export function Header() {
   const location = useLocation();
   const { pathname } = location;
-
-  console.log(pathname);
 
   return (
     <nav className="bg-gray-800">
@@ -36,20 +25,37 @@ export function Header() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.to}
-                    aria-current={
-                      pathname.includes(item.to) ? "page" : undefined
-                    }
-                    className={
-                      "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
-                    }
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                <Link
+                  to="/"
+                  aria-current={pathname.endsWith("/") ? "page" : undefined}
+                  className={
+                    "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                  }
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/weather"
+                  aria-current={
+                    pathname.endsWith("/weather") ? "page" : undefined
+                  }
+                  className={
+                    " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                  }
+                >
+                  Weather
+                </Link>
+                <Link
+                  to="/musics"
+                  aria-current={
+                    pathname.endsWith("/musics") ? "page" : undefined
+                  }
+                  className={
+                    " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                  }
+                >
+                  Musics
+                </Link>
               </div>
             </div>
           </div>
@@ -58,21 +64,33 @@ export function Header() {
 
       <div className="sm:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.to}
-              aria-current={pathname.includes(item.to) ? "page" : undefined}
-              className={classNames(
-                item.current
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                "block rounded-md px-3 py-2 text-base font-medium"
-              )}
-            >
-              {item.name}
-            </Link>
-          ))}
+          <Link
+            to="/"
+            aria-current={pathname.endsWith("/") ? "page" : undefined}
+            className={
+              "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+            }
+          >
+            Home
+          </Link>
+          <Link
+            to="/weather"
+            aria-current={pathname.endsWith("/weather") ? "page" : undefined}
+            className={
+              "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+            }
+          >
+            Weather
+          </Link>
+          <Link
+            to="/musics"
+            aria-current={pathname.endsWith("/musics") ? "page" : undefined}
+            className={
+              " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+            }
+          >
+            Musics
+          </Link>
         </div>
       </div>
     </nav>

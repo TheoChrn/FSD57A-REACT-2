@@ -11,6 +11,7 @@ import NotFound from "@/pages/not-found/page";
 import RootLayout from "@/pages/layout";
 import WeatherPage from "@/pages/weather/page";
 import { UsersProvider } from "@/contexts/user-context";
+import MusicPage, { createMusic, musicLoader } from "@/pages/musics/page";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,13 @@ const router = createBrowserRouter([
         path: "weather",
         element: <WeatherPage />,
         errorElement: <ErrorPage />,
+      },
+      {
+        path: "musics",
+        element: <MusicPage />,
+        loader: musicLoader(queryClient),
+        errorElement: <ErrorPage />,
+        action: createMusic(queryClient),
       },
       { path: "/*", element: <NotFound /> },
     ],

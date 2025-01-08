@@ -22,3 +22,10 @@ interface Weather {
     temp_max: number;
   };
 }
+
+interface Music {
+  id: number;
+  name: string;
+  author: string;
+  genre: string;
+}
