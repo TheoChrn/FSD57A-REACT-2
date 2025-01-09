@@ -14,6 +14,7 @@ import { UsersProvider } from "@/contexts/user-context";
 import MusicPage, { createMusic, musicLoader } from "@/pages/musics/page";
 import PostsPage, { createPost, postsLoader } from "@/pages/posts/page";
 import PostPage, { editPost, postLoader } from "@/pages/posts/postId/page";
+import RegisterPage, { registerAction } from "@/pages/register/page";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +67,13 @@ const router = createBrowserRouter([
         loader: postLoader(queryClient),
         errorElement: <ErrorPage />,
         action: editPost(queryClient),
+      },
+      {
+        path: "register",
+        element: <RegisterPage />,
+
+        errorElement: <ErrorPage />,
+        action: registerAction(),
       },
       { path: "/*", element: <NotFound /> },
     ],

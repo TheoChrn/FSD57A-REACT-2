@@ -126,7 +126,7 @@ export default function PostPage() {
         ) : (
           <div className="text-center">
             <div className="flex gap-4 justify-center items-center ">
-              <h1 className="text-4xl ">Post {post.title}</h1>
+              <h1 className="text-4xl ">{post.title}</h1>
               {!isEditing && (
                 <button onClick={() => setIsEditing(true)}>
                   <PiPencil size={24} />
