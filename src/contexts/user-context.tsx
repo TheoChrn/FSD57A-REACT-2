@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import React, { createContext, useContext, useMemo } from "react";
 
 type UsersContextValue = {
-  users: User[];
+  users: MockUser[];
 };
 
 const UsersContext = createContext<UsersContextValue | undefined>(undefined);

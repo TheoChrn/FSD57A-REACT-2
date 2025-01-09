@@ -4,7 +4,7 @@ export function Avatar({
   image,
   website,
   birthDate,
-}: User) {
+}: MockUser) {
   return (
     <div className="flex flex-col items-center justify-center gap-2">
       {image && <img src={image} alt="photo de profil" />}

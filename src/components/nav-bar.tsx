@@ -56,6 +56,17 @@ export function Header() {
                 >
                   Musics
                 </Link>
+                <Link
+                  to="/posts"
+                  aria-current={
+                    pathname.endsWith("/posts") ? "page" : undefined
+                  }
+                  className={
+                    " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                  }
+                >
+                  Posts
+                </Link>
               </div>
             </div>
           </div>
@@ -90,6 +101,15 @@ export function Header() {
             }
           >
             Musics
+          </Link>
+          <Link
+            to="/posts"
+            aria-current={pathname.endsWith("/posts") ? "page" : undefined}
+            className={
+              " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+            }
+          >
+            Posts
           </Link>
         </div>
       </div>

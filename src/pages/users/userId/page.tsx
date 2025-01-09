@@ -43,7 +43,7 @@ export default function User() {
   const { state } = useNavigation();
   const { data } = useSuspenseQuery(userDetailQuery(userId));
 
-  const user: User = data.data;
+  const user: MockUser = data.data;
 
   const { lat, lng } = user.address.geo;
 

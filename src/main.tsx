@@ -12,6 +12,8 @@ import RootLayout from "@/pages/layout";
 import WeatherPage from "@/pages/weather/page";
 import { UsersProvider } from "@/contexts/user-context";
 import MusicPage, { createMusic, musicLoader } from "@/pages/musics/page";
+import PostsPage, { createPost, postsLoader } from "@/pages/posts/page";
+import PostPage, { editPost, postLoader } from "@/pages/posts/postId/page";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +52,20 @@ const router = createBrowserRouter([
         loader: musicLoader(queryClient),
         errorElement: <ErrorPage />,
         action: createMusic(queryClient),
+      },
+      {
+        path: "posts",
+        element: <PostsPage />,
+        loader: postsLoader(queryClient),
+        errorElement: <ErrorPage />,
+        action: createPost(queryClient),
+      },
+      {
+        path: "posts/:id",
+        element: <PostPage />,
+        loader: postLoader(queryClient),
+        errorElement: <ErrorPage />,
+        action: editPost(queryClient),
       },
       { path: "/*", element: <NotFound /> },
     ],
