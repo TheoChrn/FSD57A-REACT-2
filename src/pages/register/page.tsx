@@ -1,6 +1,6 @@
 import { LOCAL_API_URL } from "@/lib/utils";
-import axios from "axios";
-import { ActionFunctionArgs, Form, redirect } from "react-router";
+import axios, { AxiosError } from "axios";
+import { ActionFunctionArgs, redirect, useFetcher } from "react-router";
 
 export const registerAction =
   () =>
@@ -19,21 +19,29 @@ export const registerAction =
     if (!first_name || !last_name || !email || !password)
       return { ok: false, error: "All fields are required" };
 
-    const res = await axios.post(`${LOCAL_API_URL}/register`, newUser);
+    try {
+      const res = await axios.post(`${LOCAL_API_URL}/register`, newUser);
 
-    if (res.status >= 200 && res.status < 300) {
-      alert(res.data.message);
-      return redirect("/");
+      if (res.status >= 200 && res.status < 300) {
+        alert(res.data.message);
+        return redirect("/");
+      }
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 409) {
+        return { ok: false, error: "This email is already taken" };
+      }
+      return { ok: false, error: "Something went wrong. Please try again." };
     }
 
-    return;
+    return null;
   };
 
 export default function RegisterPage() {
+  const fetcher = useFetcher();
   return (
     <main>
       <div className=" max-w-screen-lg mx-auto space-y-8 p-8">
-        <Form method="post" className="space-y-4">
+        <fetcher.Form method="post" className="space-y-4">
           <div className="flex flex-col items-center gap-2">
             <label className="flex w-full flex-col gap-2">
               First Name
@@ -78,7 +86,9 @@ export default function RegisterPage() {
           >
             Sign up
           </button>
-        </Form>
+
+          <div>{fetcher.data?.error && <p>{fetcher.data.error}</p>}</div>
+        </fetcher.Form>
       </div>
     </main>
   );
