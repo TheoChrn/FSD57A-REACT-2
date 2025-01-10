@@ -1,6 +1,9 @@
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
-export function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/login" />;
-}
+const ProtectedRoutes = () => {
+  const localStorageToken = localStorage.getItem("token");
+
+  return localStorageToken ? <Outlet /> : <Navigate to="/login" replace />;
+};
+
+export default ProtectedRoutes;

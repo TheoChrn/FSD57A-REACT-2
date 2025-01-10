@@ -1,7 +1,6 @@
-import { postsQuery, Posts } from "@/components/pages/posts/posts";
-import { LOCAL_API_URL } from "@/lib/utils";
+import { Posts, postsQuery } from "@/components/pages/posts/posts";
+import { axiosInstance } from "@/lib/utils";
 import { QueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { PiPlus } from "react-icons/pi";
 import { ActionFunctionArgs, Form, redirect } from "react-router";
 
@@ -27,10 +26,9 @@ export const createPost =
 
     if (!title || !body) return;
 
-    const res = await axios.post(`${LOCAL_API_URL}/posts`, {
+    const res = await axiosInstance.post(`/posts`, {
       title,
       body,
-      userId: "677f927b879ea75c130006eb",
     });
 
     if (res.status >= 200 && res.status < 300) {

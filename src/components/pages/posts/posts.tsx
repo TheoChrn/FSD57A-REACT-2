@@ -1,4 +1,4 @@
-import { LOCAL_API_URL } from "@/lib/utils";
+import { axiosInstance } from "@/lib/utils";
 
 import {
   queryOptions,
@@ -15,7 +15,7 @@ export const postsQuery = () =>
     queryKey: ["posts"],
     queryFn: async () => {
       try {
-        const { data } = await axios.get(`${LOCAL_API_URL}/posts`);
+        const { data } = await axiosInstance.get("/posts");
         return data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -39,14 +39,12 @@ export function Posts() {
 
   const { mutate } = useMutation({
     mutationFn: (id: number) => {
-      return axios.delete(`${LOCAL_API_URL}/posts/${id}`);
+      return axiosInstance.delete(`/posts/${id}`);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"] }),
   });
 
   const posts: PopulatedPost[] = data;
-
-  console.log(data);
 
   return (
     <div className="px-8">

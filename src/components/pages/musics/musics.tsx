@@ -38,7 +38,7 @@ export function Musics() {
   });
 
   if (isLoading) return <Loading />;
-  console.log(error);
+  console.error(error);
   if (error) return error.message;
 
   const musics: Music[] = data.data;

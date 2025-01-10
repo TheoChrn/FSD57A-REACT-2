@@ -12,11 +12,21 @@ import RootLayout from "@/pages/layout";
 import WeatherPage from "@/pages/weather/page";
 import { UsersProvider } from "@/contexts/user-context";
 import MusicPage, { createMusic, musicLoader } from "@/pages/musics/page";
-import PostsPage, { createPost, postsLoader } from "@/pages/posts/page";
-import PostPage, { editPost, postLoader } from "@/pages/posts/postId/page";
+import PostsPage, {
+  createPost,
+  postsLoader,
+} from "@/pages/protected/posts/page";
+import PostPage, {
+  editPost,
+  postLoader,
+} from "@/pages/protected/posts/postId/page";
 import RegisterPage, { registerAction } from "@/pages/register/page";
 import LoginPage, { loginAction } from "@/pages/login/page";
-import { PrivateRoute } from "@/components/protectedRoute";
+import ProtectedRoutes from "@/components/protectedRoute";
+import ProfilePage, {
+  editProfile,
+  profileLoader,
+} from "@/pages/protected/profile/page";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,71 +45,58 @@ const router = createBrowserRouter([
       const token = localStorage.getItem("token");
       return { token };
     },
-
     children: [
       {
+        element: <ProtectedRoutes />,
+        children: [
+          {
+            path: "posts",
+            element: <PostsPage />,
+            loader: postsLoader(queryClient),
+            errorElement: <ErrorPage />,
+            action: createPost(queryClient),
+          },
+          {
+            path: "posts/:id",
+            element: <PostPage />,
+            loader: postLoader(queryClient),
+            errorElement: <ErrorPage />,
+            action: editPost(queryClient),
+          },
+          {
+            path: "profile",
+            element: <ProfilePage />,
+            loader: profileLoader(queryClient),
+            errorElement: <ErrorPage />,
+            action: editProfile(queryClient),
+          },
+        ],
+      },
+      {
         index: true,
-        element: (
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        ),
+        element: <Home />,
         errorElement: <ErrorPage />,
         loader: usersLoader(queryClient),
       },
       {
         path: "users/:userId",
-        element: (
-          <PrivateRoute>
-            <User />
-          </PrivateRoute>
-        ),
+        element: <User />,
         loader: userLoader(queryClient),
         errorElement: <ErrorPage />,
       },
       {
         path: "weather",
-
-        element: (
-          <PrivateRoute>
-            <WeatherPage />
-          </PrivateRoute>
-        ),
+        element: <WeatherPage />,
         errorElement: <ErrorPage />,
       },
       {
         path: "musics",
-        element: (
-          <PrivateRoute>
-            <MusicPage />
-          </PrivateRoute>
-        ),
+        element: <MusicPage />,
         loader: musicLoader(queryClient),
         errorElement: <ErrorPage />,
         action: createMusic(queryClient),
       },
-      {
-        path: "posts",
-        element: (
-          <PrivateRoute>
-            <PostsPage />
-          </PrivateRoute>
-        ),
-        loader: postsLoader(queryClient),
-        errorElement: <ErrorPage />,
-        action: createPost(queryClient),
-      },
-      {
-        path: "posts/:id",
-        element: (
-          <PrivateRoute>
-            <PostPage />
-          </PrivateRoute>
-        ),
-        loader: postLoader(queryClient),
-        errorElement: <ErrorPage />,
-        action: editPost(queryClient),
-      },
+
       {
         path: "register",
         element: <RegisterPage />,

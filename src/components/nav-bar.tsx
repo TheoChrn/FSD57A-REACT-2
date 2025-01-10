@@ -1,9 +1,17 @@
-import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
+import {
+  Link,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  useRevalidator,
+} from "react-router";
 
 export function Header() {
   const { token } = useLoaderData();
+
   const location = useLocation();
   const navigate = useNavigate();
+  const revalidator = useRevalidator();
   const { pathname } = location;
 
   return (
@@ -58,24 +66,40 @@ export function Header() {
                 >
                   Musics
                 </Link>
-                <Link
-                  to="/posts"
-                  aria-current={
-                    pathname.endsWith("/posts") ? "page" : undefined
-                  }
-                  className={
-                    " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
-                  }
-                >
-                  Posts
-                </Link>
+                {token && (
+                  <>
+                    <Link
+                      to="/posts"
+                      aria-current={
+                        pathname.endsWith("/posts") ? "page" : undefined
+                      }
+                      className={
+                        " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                      }
+                    >
+                      Posts
+                    </Link>
+                    <Link
+                      to="/profile"
+                      aria-current={
+                        pathname.endsWith("/profile") ? "page" : undefined
+                      }
+                      className={
+                        " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                      }
+                    >
+                      Profile
+                    </Link>
+                  </>
+                )}
               </div>
               <div className="flex space-x-4">
                 {token ? (
                   <button
                     onClick={() => {
                       localStorage.removeItem("token");
-                      navigate("/login");
+                      revalidator.revalidate();
+                      navigate("/login", { replace: true });
                     }}
                     className={
                       "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
@@ -139,15 +163,30 @@ export function Header() {
           >
             Musics
           </Link>
-          <Link
-            to="/posts"
-            aria-current={pathname.endsWith("/posts") ? "page" : undefined}
-            className={
-              " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
-            }
-          >
-            Posts
-          </Link>
+          {token && (
+            <>
+              <Link
+                to="/posts"
+                aria-current={pathname.endsWith("/posts") ? "page" : undefined}
+                className={
+                  " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                }
+              >
+                Posts
+              </Link>
+              <Link
+                to="/profile"
+                aria-current={
+                  pathname.endsWith("/profile") ? "page" : undefined
+                }
+                className={
+                  " aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                }
+              >
+                Profile
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

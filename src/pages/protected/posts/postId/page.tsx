@@ -1,11 +1,10 @@
 import { postsQuery } from "@/components/pages/posts/posts";
-import { LOCAL_API_URL } from "@/lib/utils";
+import { axiosInstance } from "@/lib/utils";
 import {
   QueryClient,
   queryOptions,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import axios from "axios";
 import { useState } from "react";
 import { PiArrowLeft, PiFloppyDisk, PiPencil } from "react-icons/pi";
 import {
@@ -20,14 +19,9 @@ export const postQuery = (id: string) =>
   queryOptions({
     queryKey: ["posts", id],
     queryFn: async () => {
-      const posts = await axios.get(`${LOCAL_API_URL}/posts/${id}`);
-      if (!posts) {
-        throw new Response("", {
-          status: 404,
-          statusText: "Not Found",
-        });
-      }
-      return posts;
+      const { data } = await axiosInstance.get(`/posts/${id}`);
+
+      return data;
     },
   });
 
@@ -55,7 +49,7 @@ export const editPost =
     if (!title || !body)
       return { ok: false, error: "title and body are required" };
 
-    const res = await axios.put(`${LOCAL_API_URL}/posts/${id}`, {
+    const res = await axiosInstance.put(`/posts/${id}`, {
       title,
       body,
     });
@@ -81,7 +75,7 @@ export default function PostPage() {
 
   const { data } = useSuspenseQuery(postQuery(postId));
 
-  const post: PopulatedPost = data.data;
+  const post: PopulatedPost = data;
 
   return (
     <main>

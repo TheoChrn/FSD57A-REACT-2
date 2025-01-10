@@ -27,7 +27,7 @@ export const registerAction =
         return redirect("/");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error instanceof AxiosError && error.response?.status === 409) {
         return { ok: false, error: "This email is already taken" };
       }

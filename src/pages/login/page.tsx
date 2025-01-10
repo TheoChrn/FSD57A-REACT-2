@@ -1,5 +1,5 @@
-import { LOCAL_API_URL } from "@/lib/utils";
-import axios, { AxiosError } from "axios";
+import { axiosInstance } from "@/lib/utils";
+import { AxiosError } from "axios";
 import { ActionFunctionArgs, redirect, useFetcher } from "react-router";
 
 export const loginAction =
@@ -18,15 +18,15 @@ export const loginAction =
       return { ok: false, error: "All fields are required" };
 
     try {
-      const res = await axios.post(`${LOCAL_API_URL}/login`, credentials);
+      const res = await axiosInstance.post(`/login`, credentials);
 
       if (res.status >= 200 && res.status < 300) {
         localStorage.setItem("token", res.data.token);
-        alert(res.data.message);
-        return redirect("/");
+        alert("Welcome");
+        return redirect("/posts");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error instanceof AxiosError) {
         return { ok: false, error: "Email or password invalid" };
       }
