@@ -15,6 +15,8 @@ import MusicPage, { createMusic, musicLoader } from "@/pages/musics/page";
 import PostsPage, { createPost, postsLoader } from "@/pages/posts/page";
 import PostPage, { editPost, postLoader } from "@/pages/posts/postId/page";
 import RegisterPage, { registerAction } from "@/pages/register/page";
+import LoginPage, { loginAction } from "@/pages/login/page";
+import { PrivateRoute } from "@/components/protectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,41 +31,71 @@ const router = createBrowserRouter([
     path: "/",
     errorElement: <ErrorPage />,
     element: <RootLayout />,
+    loader: () => {
+      const token = localStorage.getItem("token");
+      return { token };
+    },
+
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
         errorElement: <ErrorPage />,
         loader: usersLoader(queryClient),
       },
       {
         path: "users/:userId",
-        element: <User />,
+        element: (
+          <PrivateRoute>
+            <User />
+          </PrivateRoute>
+        ),
         loader: userLoader(queryClient),
         errorElement: <ErrorPage />,
       },
       {
         path: "weather",
-        element: <WeatherPage />,
+
+        element: (
+          <PrivateRoute>
+            <WeatherPage />
+          </PrivateRoute>
+        ),
         errorElement: <ErrorPage />,
       },
       {
         path: "musics",
-        element: <MusicPage />,
+        element: (
+          <PrivateRoute>
+            <MusicPage />
+          </PrivateRoute>
+        ),
         loader: musicLoader(queryClient),
         errorElement: <ErrorPage />,
         action: createMusic(queryClient),
       },
       {
         path: "posts",
-        element: <PostsPage />,
+        element: (
+          <PrivateRoute>
+            <PostsPage />
+          </PrivateRoute>
+        ),
         loader: postsLoader(queryClient),
         errorElement: <ErrorPage />,
         action: createPost(queryClient),
       },
       {
         path: "posts/:id",
-        element: <PostPage />,
+        element: (
+          <PrivateRoute>
+            <PostPage />
+          </PrivateRoute>
+        ),
         loader: postLoader(queryClient),
         errorElement: <ErrorPage />,
         action: editPost(queryClient),
@@ -73,6 +105,12 @@ const router = createBrowserRouter([
         element: <RegisterPage />,
         errorElement: <ErrorPage />,
         action: registerAction(),
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+        errorElement: <ErrorPage />,
+        action: loginAction(),
       },
       { path: "/*", element: <NotFound /> },
     ],

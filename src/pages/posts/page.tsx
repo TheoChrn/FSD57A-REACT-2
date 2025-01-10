@@ -3,10 +3,18 @@ import { LOCAL_API_URL } from "@/lib/utils";
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { PiPlus } from "react-icons/pi";
-import { ActionFunctionArgs, Form } from "react-router";
+import { ActionFunctionArgs, Form, redirect } from "react-router";
 
 export const postsLoader = (queryClient: QueryClient) => async () => {
-  await queryClient.ensureQueryData(postsQuery());
+  try {
+    await queryClient.ensureQueryData(postsQuery());
+  } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return redirect("/login");
+    }
+
+    throw error;
+  }
 };
 
 export const createPost =

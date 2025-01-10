@@ -1,19 +1,21 @@
-import { useRouteError, isRouteErrorResponse } from "react-router";
+import { AxiosError } from "axios";
+import { isRouteErrorResponse, useRouteError } from "react-router";
 
 export default function ErrorPage() {
   const error = useRouteError();
-  console.error(error);
 
   let errorMessage = "";
+  let errorStatus;
   if (isRouteErrorResponse(error)) {
-    errorMessage = error.statusText;
-  } else if (error instanceof Error) {
-    errorMessage = error.message;
+    errorMessage = error.data.statusText;
+  } else if (error instanceof AxiosError) {
+    errorStatus = error.status;
+    errorMessage = error.response?.data.message || error.message;
   }
 
   return (
     <div id="error-page">
-      <h1>Oops!</h1>
+      <h1>Error {errorStatus}</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>
         <i>{errorMessage}</i>

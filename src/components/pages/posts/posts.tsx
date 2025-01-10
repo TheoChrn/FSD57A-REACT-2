@@ -8,20 +8,27 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { PiTrash } from "react-icons/pi";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
 
 export const postsQuery = () =>
   queryOptions({
     queryKey: ["posts"],
     queryFn: async () => {
-      const posts = await axios.get(`${LOCAL_API_URL}/posts`);
-      if (!posts) {
-        throw new Response("", {
-          status: 404,
-          statusText: "Not Found",
-        });
+      try {
+        const { data } = await axios.get(`${LOCAL_API_URL}/posts`);
+        return data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            return redirect("/");
+          }
+          if (error.response?.status === 404) {
+            return redirect("/not-found");
+          }
+        }
+
+        throw new Error("An unexpected error occurred while fetching posts.");
       }
-      return posts;
     },
   });
 
@@ -37,7 +44,7 @@ export function Posts() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"] }),
   });
 
-  const posts: PopulatedPost[] = data.data;
+  const posts: PopulatedPost[] = data;
 
   console.log(data);
 
@@ -66,7 +73,7 @@ export function Posts() {
           </div>
         </>
       ) : (
-        <span>No musics were found</span>
+        <span>No posts were found</span>
       )}
     </div>
   );

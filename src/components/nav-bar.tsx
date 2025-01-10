@@ -1,7 +1,9 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
 
 export function Header() {
+  const { token } = useLoaderData();
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
 
   return (
@@ -23,7 +25,7 @@ export function Header() {
                 className="h-8 w-auto"
               />
             </div>
-            <div className="hidden sm:ml-6 sm:block">
+            <div className="hidden sm:ml-6 sm:flex sm:justify-between sm:flex-1">
               <div className="flex space-x-4">
                 <Link
                   to="/"
@@ -67,6 +69,41 @@ export function Header() {
                 >
                   Posts
                 </Link>
+              </div>
+              <div className="flex space-x-4">
+                {token ? (
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      navigate("/login");
+                    }}
+                    className={
+                      "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                    }
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      to="/register"
+                      aria-current={pathname.endsWith("/") ? "page" : undefined}
+                      className={
+                        "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                      }
+                    >
+                      Register
+                    </Link>
+                    <Link
+                      to="/login"
+                      className={
+                        "  aria- aria-page:bg-gray-900 aria-page:text-white text-gray-300 hover:bg-gray-700 hover:text-whiterounded-md px-3 py-2 text-sm font-medium"
+                      }
+                    >
+                      Login
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
